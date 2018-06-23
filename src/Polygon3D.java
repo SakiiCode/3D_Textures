@@ -36,7 +36,7 @@ public class Polygon3D {
 			ymax = Math.max(ymax,v.proj.y);
 		}
 		
-		//a rajzot a képernyõn belül kell tartani, kívülre nem rajzolhatunk
+		//a rajzot a kÃ©pernyÅ‘n belÃ¼l kell tartani, kÃ­vÃ¼lre nem rajzolhatunk
 		ymin=Math.max(ymin, 0);
 		ymax=Math.max(ymax, 0);
 		ymin=Math.min(ymin, Main.FrameBuffer.getHeight());
@@ -54,7 +54,7 @@ public class Polygon3D {
 		bufferUVZmax.clear();
 		
 
-		//vertexrõl vertexre körbemegyünk
+		//vertexrÅ‘l vertexre kÃ¶rbemegyÃ¼nk
 		for(int i=0;i<vertices.size();i++) {
 			
 			Vertex v1 = vertices.get(i); 
@@ -65,24 +65,22 @@ public class Polygon3D {
 			Point p1 = v1.proj;
 			Point p2 = v2.proj;
 			
-			//p1 és p2 meredeksége
+			//p1 Ã©s p2 meredeksÃ©ge
 			double m=(p2.y==p1.y) ? 0.0 : (p2.x-p1.x)*1.0/(p2.y-p1.y);
 			
-			// mindenképpen y pozitív irányban szeretnénk végigmenni a polygon oldalán, de lehet, hogy p2 van feljebb.
+			// mindenkÃ©ppen y pozitÃ­v irÃ¡nyban szeretnÃ©nk vÃ©gigmenni a polygon oldalÃ¡n, de lehet, hogy p2 van feljebb.
 			boolean reverse = (p1.y<p2.y);
 			int xmin = reverse ? p1.x : p2.x;
-			int ymin= reverse ? p1.y : p2.y; // y határértékei adott szakaszon
+			int ymin= reverse ? p1.y : p2.y; // y hatÃ¡rÃ©rtÃ©kei adott szakaszon
 			int ymax = reverse ? p2.y : p1.y;
 			
-			/*ymin=Math.max(ymin, 0);
-			ymax=Math.min(ymax, Main.screenHeight);
-			xmin=Math.max(xmin, 0);*/
-			
-			double x  = xmin; //aktuális x érték
 
 			
-			// megkeressük az adott sor bal és jobb szélét, társítunk a két ponthoz UVZ-t is
-			// y-t 1-gyel, x-et m-mel léptetjük
+			double x  = xmin; //aktuÃ¡lis x Ã©rtÃ©k
+
+			
+			// megkeressÃ¼k az adott sor bal Ã©s jobb szÃ©lÃ©t, tÃ¡rsÃ­tunk a kÃ©t ponthoz UVZ-t is
+			// y-t 1-gyel, x-et m-mel lÃ©ptetjÃ¼k
 			for(int y=ymin;y<ymax;y++) {
 
 				if(bufferXmin.get(y) == null || x < bufferXmin.get(y)) {
@@ -102,53 +100,47 @@ public class Polygon3D {
 				
 		}
 		
-		// a befoglaló téglalap méretei
-		//int imgx = Collections.min(bufferXmin.values());
+		// a befoglalÃ³ tÃ©glalap szÃ©lessÃ©ge
 		int imgw = Collections.max(bufferXmax.values()) -  Collections.min(bufferXmin.values());
-		//int imgy = ymin;
-		//int imgh = ymax-ymin;
 
-		
-		//g.setColor(Color.BLACK);
-		if(imgw>0) { //ha merõlegesen állunk ne rajzoljon
+		if(imgw>0) { //ha merÅ‘legesen Ã¡llunk ne rajzoljon
 			
-			// átmeneti kép, erre rajzoljuk a polygont, és ezt rajzoljuk az ablakra
-			//BufferedImage img = new BufferedImage(imgw, imgh, BufferedImage.TYPE_INT_ARGB);
+
 			
-			//a polygon minden során végigmegyünk
+			//a polygon minden sorÃ¡n vÃ©gigmegyÃ¼nk
 			for(int y=ymin;y<ymax;y++)
 			{
-				//a polygon adott sorának valódi széleinek adatai
+				//a polygon adott sorÃ¡nak valÃ³di szÃ©leinek adatai
 				int xmin=bufferXmin.get(y);
 				int xmax=bufferXmax.get(y);
 				
 				UVZ uvzmin = bufferUVZmin.get(y);
 				UVZ uvzmax = bufferUVZmax.get(y);
 			 
-				// eltároljuk 1/z, u/z, v/z "meredekségét", hogy ne kelljen minden pixelnél újra kiszámolni
+				// eltÃ¡roljuk 1/z, u/z, v/z "meredeksÃ©gÃ©t", hogy ne kelljen minden pixelnÃ©l Ãºjra kiszÃ¡molni
 				double Siz = Util.getSlope(xmin, xmax, uvzmin.iz, uvzmax.iz);
 				double Suz = Util.getSlope(xmin, xmax, uvzmin.uz, uvzmax.uz);
 				double Svz = Util.getSlope(xmin, xmax, uvzmin.vz, uvzmax.vz);
 				
-				//egy sorban csak a szükséges pixeleket érintjük, nem rajzolunk a képernyõn kívülre
+				//egy sorban csak a szÃ¼ksÃ©ges pixeleket Ã©rintjÃ¼k, nem rajzolunk a kÃ©pernyÅ‘n kÃ­vÃ¼lre
 				int xmin2=Math.max(xmin, 0);
 				int xmax2=Math.min(xmax, Main.screenWidth);
 				for(int x=xmin2;x<xmax2;x++)
 				{
 				 
-				 	//ez a két sor nem ide tartozik, csak egy példa, ha esetleg vízszintesen szeretnél egy képet torzítani
+				 	//ez a kÃ©t sor nem ide tartozik, csak egy pÃ©lda, ha esetleg vÃ­zszintesen szeretnÃ©l egy kÃ©pet torzÃ­tani
 				 	//double u=interp(xmin, xmax, nx, 0, texture.getWidth());
 				 	//double v=interp(ymin, ymax, y, 0, texture.getHeight());
 					
 					
 					
 				 
-					//a sor két szélérõl befele interpoláljuk 1/z,u/z,v/z változókat
+					//a sor kÃ©t szÃ©lÃ©rÅ‘l befele interpolÃ¡ljuk 1/z,u/z,v/z vÃ¡ltozÃ³kat
 					double iz=Util.interpSlope(xmin, x, uvzmin.iz, Siz);
 				 	double uz=Util.interpSlope(xmin, x, uvzmin.uz, Suz);
 				 	double vz=Util.interpSlope(xmin, x, uvzmin.vz, Svz);
 				 	
-				 	// a mögöttünk lévõ tárgyak levágását jobban kell megoldani, de a hiba elkerüléséhez ez is elég
+				 	// a mÃ¶gÃ¶ttÃ¼nk lÃ©vÅ‘ tÃ¡rgyak levÃ¡gÃ¡sÃ¡t jobban kell megoldani, de a hiba elkerÃ¼lÃ©sÃ©hez ez is elÃ©g
 				 	if(iz<0) return;
 				 	
 				 	
