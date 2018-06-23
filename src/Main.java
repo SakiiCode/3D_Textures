@@ -27,17 +27,17 @@ public class Main{
 		public void paintComponent(Graphics g) {
 			
 			Graphics fb = FrameBuffer.createGraphics();
-			// ablak tˆrlÈse
+			// ablak t√∂rl√©se
 			fb.setColor(Color.lightGray);
 			fb.fillRect(0, 0, this.getWidth(), this.getHeight());
 			fb.dispose();
-			//rajzol·s elıtt a polygonokat kˆzelsÈgi sorrendbe is kÈne tenni!
+			//rajzol√°s el√µtt a polygonokat k√∂zels√©gi sorrendbe is k√©ne tenni!
 			tmpoly.update();
 			tmpoly.draw(FrameBuffer);
 			
 			g.drawImage(FrameBuffer, 0, 0, null);
 			
-			//fps sz·ml·lÛ
+			//fps sz√°ml√°l√≥
 			g.setColor(Color.BLACK);
 			double fps = 1000000000d/(System.nanoTime()-prevTime);
 			g.drawString("FPS: "+(int)fps, 100, 100);
@@ -50,8 +50,8 @@ public class Main{
 	};
 	
 
-	static Vector CameraPos = new Vector(0, -10, 0); // kezdeti kamera pozÌciÛ
-	static Vector CameraAim = new Vector(0, 1, 0); // kezdeti kamera ir·ny
+	static Vector CameraPos = new Vector(0, -10, 0); // kezdeti kamera poz√≠ci√≥
+	static Vector CameraAim = new Vector(0, 1, 0); // kezdeti kamera ir√°ny
 	
 	static Polygon3D tmpoly;
 	
@@ -71,7 +71,7 @@ public class Main{
 		
 				
 				
-		// egyszer˚ polygon3d be·llÌt·s
+		// egyszer√ª polygon3d be√°ll√≠t√°s
 		ArrayList<Vertex> vtmp = new ArrayList<>(4);
 		
 		vtmp.add(new Vertex(-1, 5,   1, 0, 0)); 
@@ -88,7 +88,6 @@ public class Main{
 	}
 	
 	public static void setupWindow() {
-		Frame.setUndecorated(true);
 		Frame.setSize(screenWidth, screenHeight);
 		Frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		Frame.add(panel);
